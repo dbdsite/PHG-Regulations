@@ -1,4 +1,7 @@
-TonLuck,huntress,10000,https://twitch.tv/tonluck,tonluck#3220,confirmed
-Player2,spirit,850,https://twitch.tv/player2,player2#1234,pending
-Player3,oni,1200,https://twitch.tv/player3,player3#5678,confirmed
-Player4,artist,950,https://twitch.tv/player4,player4#9012,rejected
+VShtamm,Spirit,4600,https://www.twitch.tv/vshtamm,vshtamm_,confirmed
+Rocket,Spirit,11800,https://www.twitch.tv/1v1rocket,rocketdbd,confirmed
+Dark Passenger,Oni,3500,https://www.twitch.tv/dark0passenger,vernal_fortune69_45686,confirmed
+Murasame,Huntres,4000,https://www.twitch.tv/1yhgmz1,idmurasame,rejected
+Karpov123,Spirit,4000,https://www.twitch.tv/fovemix,karpov1230973,confirmed
+NightAngel,Artist,3100,https://www.twitch.tv/nightange11,haorami,confirmed
+Wenny,Oni,2700,https://twitch.tv/dotti_dbd,wenny_dbd,confirmed
