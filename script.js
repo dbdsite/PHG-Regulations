@@ -1015,3 +1015,211 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadParticipants();
     }
 });
+// ========== MODAL WINDOWS ==========
+function initModals() {
+    // Модальное окно для участников
+    const participantsBtn = document.querySelector('button[data-section="participants"]');
+    const participantsModal = document.getElementById('modalParticipants');
+    const closeParticipantsBtn = document.getElementById('closeParticipantsModal');
+    const participantsFrame = document.getElementById('participantsFrame');
+
+    // Модальное окно для сетки турнира
+    const bracketBtn = document.querySelector('button[data-section="bracket"]');
+    const bracketModal = document.getElementById('modalBracket');
+    const closeBracketBtn = document.getElementById('closeBracketModal');
+    const bracketFrame = document.getElementById('bracketFrame');
+
+    // Функция открытия модального окна
+    function openModal(modal, iframe) {
+        // Обновляем timestamp для обхода кэша
+        if (iframe) {
+            const currentSrc = iframe.src.split('?')[0];
+            iframe.src = `${currentSrc}?t=${new Date().getTime()}`;
+        }
+        
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+        
+        // Отключаем основную навигацию
+        const navSection = document.getElementById('navSection');
+        const prizeSection = document.getElementById('prizeSection');
+        const backBtn = document.getElementById('backBtn');
+        
+        if (navSection) navSection.style.display = 'none';
+        if (prizeSection) prizeSection.style.display = 'none';
+        if (backBtn) backBtn.classList.remove('visible');
+        
+        // Скрываем все секции контента
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+    }
+
+    // Функция закрытия модального окна
+    function closeModal(modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+        
+        // Показываем основную навигацию
+        const navSection = document.getElementById('navSection');
+        const prizeSection = document.getElementById('prizeSection');
+        
+        if (navSection) navSection.style.display = 'flex';
+        if (prizeSection) prizeSection.style.display = 'flex';
+    }
+
+    // Обработчики для кнопки участников
+    if (participantsBtn) {
+        participantsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(participantsModal, participantsFrame);
+        });
+    }
+
+    // Обработчики для кнопки сетки турнира
+    if (bracketBtn) {
+        bracketBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(bracketModal, bracketFrame);
+        });
+    }
+
+    // Закрытие модальных окон
+    if (closeParticipantsBtn) {
+        closeParticipantsBtn.addEventListener('click', () => {
+            closeModal(participantsModal);
+        });
+    }
+
+    if (closeBracketBtn) {
+        closeBracketBtn.addEventListener('click', () => {
+            closeModal(bracketModal);
+        });
+    }
+
+    // Закрытие по клику на фон
+    if (participantsModal) {
+        participantsModal.addEventListener('click', (e) => {
+            if (e.target === participantsModal) {
+                closeModal(participantsModal);
+            }
+        });
+    }
+
+    if (bracketModal) {
+        bracketModal.addEventListener('click', (e) => {
+            if (e.target === bracketModal) {
+                closeModal(bracketModal);
+            }
+        });
+    }
+
+    // Закрытие по клавише ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (participantsModal && participantsModal.classList.contains('active')) {
+                closeModal(participantsModal);
+            }
+            if (bracketModal && bracketModal.classList.contains('active')) {
+                closeModal(bracketModal);
+            }
+        }
+    });
+}
+
+// ========== ОБНОВЛЕННАЯ ФУНКЦИЯ НАВИГАЦИИ ==========
+function initNavigation() {
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.content-section');
+    const backBtn = document.getElementById('backBtn');
+    const navSection = document.getElementById('navSection');
+    const prizeSection = document.getElementById('prizeSection');
+
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const sectionId = btn.dataset.section;
+            
+            // Для кнопок "Участники" и "Сетка турнира" используем модальные окна
+            if (sectionId === 'participants' || sectionId === 'bracket') {
+                // Эти кнопки обрабатываются в initModals()
+                return;
+            }
+            
+            // Для остальных кнопок (Info, Balance) работаем как обычно
+            e.preventDefault();
+            
+            // Hide all sections first
+            sections.forEach(s => s.classList.remove('active'));
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Hide nav and prize sections
+            navSection.style.display = 'none';
+            prizeSection.style.display = 'none';
+            
+            // Show back button
+            backBtn.classList.add('visible');
+
+            // Load data for info and balance if needed
+            if (sectionId === 'info') {
+                // Info section already has content
+            } else if (sectionId === 'balance') {
+                // Balance section already initialized
+            }
+        });
+    });
+
+    backBtn.addEventListener('click', () => {
+        sections.forEach(s => s.classList.remove('active'));
+        navSection.style.display = 'flex';
+        prizeSection.style.display = 'flex';
+        backBtn.classList.remove('visible');
+    });
+}
+
+// ========== ОБНОВЛЕННАЯ ФУНКЦИЯ INITIALIZATION ==========
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM loaded, initializing...');
+
+    // Initialize loader
+    initLoader();
+
+    // Detect DevTools
+    detectDevTools();
+
+    // Set initial language
+    setLanguage(currentLang);
+
+    // Load Telegram config from Google Sheets
+    await loadTelegramConfig();
+
+    // Initialize components
+    initNavigation();
+    initKillerSelection();
+    initRegistration();
+    initBalanceSection();
+    initBracket();
+    initModals(); // Инициализация модальных окон
+
+    // Language toggle
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', function() {
+            const newLang = currentLang === 'ru' ? 'en' : 'ru';
+            currentLang = newLang;
+            setLanguage(newLang);
+            initBalanceSection();
+            
+            if (document.getElementById('participants').classList.contains('active')) {
+                // Загружаем участников если секция активна
+                // Но теперь она не будет активна, т.к. используем модальное окно
+            }
+            
+            if (checkRegistration()) {
+                initRegistration();
+            }
+        });
+    }
+});
