@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TOURNAMENT BRACKET · 32 → 20 → 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: 'Rajdhani', sans-serif;
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tournament-container {
+            max-width: 1600px;
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        .tournament-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tournament-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            color: #ff0a0a;
+            text-shadow: 0 0 20px #ff0a0a;
+            letter-spacing: 8px;
+        }
+
+        .tournament-header h2 {
+            font-family: 'Rajdhani', sans-serif;
+            color: #888;
+            letter-spacing: 4px;
+            font-size: 1.2rem;
+        }
+
+        .bracket {
+            display: flex;
+            justify-content: space-between;
+            gap: 80px;
+            position: relative;
+            min-width: 1400px;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            position: relative;
+        }
+
+        .round-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #ff0a0a;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(255, 10, 10, 0.5);
+            letter-spacing: 4px;
+            border-bottom: 2px solid #8b0000;
+            padding-bottom: 10px;
+        }
+
+        .matches-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .match {
+            background: linear-gradient(145deg, #1e1e1e, #151515);
+            border: 2px solid #8b0000;
+            border-left: 6px solid #ff0a0a;
+            border-radius: 8px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.2);
+        }
+
+        .match:hover {
+            border-color: #ff0a0a;
+            box-shadow: 0 0 25px rgba(255, 10, 10, 0.4);
+            transform: translateX(5px);
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-icon {
+            color: #ff0a0a;
+            font-size: 1rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .player-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .player-score {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: #ff0a0a;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .winner {
+            background: linear-gradient(90deg, rgba(0, 255, 0, 0.1), transparent);
+            border-left-color: #00ff00;
+        }
+
+        .winner .player-name {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .connector-line {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #8b0000, #ff0a0a);
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(255, 10, 10, 0.5);
+        }
+
+        .connector-line::before,
+        .connector-line::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff0a0a;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px #ff0a0a;
+        }
+
+        .connector-line::before {
+            left: -4px;
+        }
+
+        .connector-line::after {
+            right: -4px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+            padding: 25px;
+            background: linear-gradient(145deg, #1a1a1a, #121212);
+            border: 1px solid #8b0000;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .stat-item i {
+            color: #ff0a0a;
+        }
+
+        .stat-number {
+            color: #ff0a0a;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 1600px) {
+            .bracket {
+                gap: 60px;
+            }
+            .connector-line {
+                width: 30px;
+                right: -30px;
+            }
+        }
+
+        .final-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-left: 20px;
+        }
+
+        .champion-box {
+            background: linear-gradient(145deg, #2a2a1a, #1a1a0a);
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            padding: 30px 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .champion-box i {
+            color: #ffd700;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .champion-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .champion-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="tournament-container">
+        <div class="tournament-header">
+            <h1>PHG MAJOR</h1>
+            <h2>32 → 20 → 4 → ЧЕМПИОН</h2>
+        </div>
+
+        <div class="bracket">
+            <!-- КОЛОНКА 1: 32 ЧЕЛОВЕКА (16 МАТЧЕЙ) -->
+            <div class="round">
+                <div class="round-title">РАУНД 1 · 32</div>
+                <div class="matches-container">
+                    <!-- Генерируем 16 матчей по 32 игрока -->
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">VShtamm</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-skull player-icon"></i>
+                            <span class="player-name">Rocket</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Dark Passenger</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Murasame</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Karpov123</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">NightAngel</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Wenny</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">TonLuck</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player9</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player10</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player11</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player12</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player13</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player14</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player15</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player16</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player17</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player18</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player19</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player20</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player21</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player22</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player23</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player24</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player25</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player26</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player27</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player28</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player29</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player30</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player31</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player32</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КОЛОНКА 2: 20 ЧЕЛОВЕК (10 МАТЧЕЙ) -->
+            <div class="round">
+                <div class="round-title">РАУНД 2 · 20</div>
+                <div class="matches-container">
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Rocket</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Dark Passenger</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">NightAngel</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Wenny</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player10</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player11</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player14</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player15</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player18</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player19</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player22</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player23</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player26</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player27</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player30</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player31</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player33</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player34</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player35</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player36</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КОЛОНКА 3: 4 ЧЕЛОВЕКА (2 МАТЧА) -->
+            <div class="round">
+                <div class="round-title">РАУНД 3 · 4</div>
+                <div class="matches-container">
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Rocket</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Wenny</span>
+                        </div>
+                        <span class="player-score">0</span>
+                        <div class="connector-line"></div>
+                    </div>
+
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player15</span>
+                        </div>
+                        <span class="player-score">1</span>
+                        <div class="connector-line"></div>
+                    </div>
+                    <div class="match winner">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player31</span>
+                        </div>
+                        <span class="player-score">2</span>
+                        <div class="connector-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- КОЛОНКА 4: ФИНАЛ - ЧЕМПИОН -->
+            <div class="round">
+                <div class="round-title" style="color: #ffd700;">ФИНАЛ</div>
+                <div class="final-section">
+                    <div class="match" style="border-color: #ffd700; border-left-color: #ffd700;">
+                        <div class="player-info">
+                            <i class="fas fa-crown" style="color: #ffd700;"></i>
+                            <span class="player-name" style="color: #ffd700;">Rocket</span>
+                        </div>
+                        <span class="player-score" style="color: #ffd700;">3</span>
+                    </div>
+                    <div class="match">
+                        <div class="player-info">
+                            <i class="fas fa-user player-icon"></i>
+                            <span class="player-name">Player31</span>
+                        </div>
+                        <span class="player-score">1</span>
+                    </div>
+                    
+                    <div class="champion-box" style="margin-top: 30px;">
+                        <i class="fas fa-trophy"></i>
+                        <h3>ЧЕМПИОН</h3>
+                        <div class="champion-name">Rocket</div>
+                        <div style="color: #ffd700; margin-top: 10px;">🥇 1 МЕСТО</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="stats-container">
+            <div class="stat-item">
+                <i class="fas fa-users"></i>
+                <span>УЧАСТНИКИ: <span class="stat-number">32</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-arrow-right"></i>
+                <span>ВТОРОЙ РАУНД: <span class="stat-number">20</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-arrow-right"></i>
+                <span>ТРЕТИЙ РАУНД: <span class="stat-number">4</span></span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-crown" style="color: #ffd700;"></i>
+                <span>ЧЕМПИОН: <span class="stat-number" style="color: #ffd700;">Rocket</span></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

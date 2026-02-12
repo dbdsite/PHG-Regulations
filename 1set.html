@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHG PARTICIPANTS · СЕТКА ИГРОКОВ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #ff0a0a;
+            --dark-red: #8b0000;
+            --blood-red: #660000;
+            --neon-red: #ff3333;
+            --bg-black: #0a0a0a;
+            --bg-dark: #111111;
+            --bg-card: #1a1a1a;
+            --text-white: #ffffff;
+            --text-gray: #888888;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)), url('https://i.imgur.com/WDo3pFv.png') center/cover fixed;
+            color: var(--text-white);
+            min-height: 100vh;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        /* ЗАГОЛОВОК */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--primary-red);
+            text-shadow: 0 0 10px var(--primary-red);
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+        }
+
+        /* СЕТКА КАРТОЧЕК */
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+        }
+
+        /* КАРТОЧКА ИГРОКА */
+        .player-card {
+            background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+            border: 2px solid var(--dark-red);
+            border-left: 4px solid var(--primary-red);
+            padding: 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .player-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 10, 10, 0.3);
+        }
+
+        /* ВЕРХНЯЯ ЧАСТЬ */
+        .player-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--dark-red);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .player-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-name i {
+            color: var(--primary-red);
+            font-size: 1.3rem;
+        }
+
+        .player-name h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--text-white);
+        }
+
+        .player-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--dark-red);
+            font-weight: 900;
+            opacity: 0.5;
+        }
+
+        /* ИНФО О КИЛЛЕРЕ */
+        .killer-info {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--dark-red);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .killer-icon {
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .killer-name {
+            font-size: 1.1rem;
+            color: var(--text-white);
+        }
+
+        .killer-hours {
+            margin-left: auto;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #00ffff;
+            padding: 4px 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: #00ffff;
+        }
+
+        /* ДЕТАЛИ */
+        .player-details {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-gray);
+        }
+
+        .detail-row i {
+            width: 20px;
+            color: var(--primary-red);
+        }
+
+        .detail-row a {
+            color: var(--text-white);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--dark-red);
+        }
+
+        .detail-row a:hover {
+            color: var(--primary-red);
+            border-bottom-color: var(--primary-red);
+        }
+
+        /* СТАТУС */
+        .player-status {
+            padding: 15px 20px;
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border-top: 1px solid var(--dark-red);
+        }
+
+        .status-confirmed {
+            background: rgba(0, 255, 0, 0.1);
+            color: #00ff00;
+            border-top-color: #00ff00;
+        }
+
+        .status-rejected {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0a0a;
+            border-top-color: #ff0a0a;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 0, 0.1);
+            color: #ffa500;
+            border-top-color: #ffa500;
+        }
+
+        /* СТАТИСТИКА */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+            border: 2px solid var(--dark-red);
+        }
+
+        .stat {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat i {
+            margin-right: 8px;
+            color: var(--primary-red);
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .title { font-size: 2rem; }
+            .players-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">PHG PLAYERS</div>
+            <div class="subtitle">СПИСОК УЧАСТНИКОВ</div>
+        </div>
+
+        <!-- СЕТКА ИГРОКОВ - ДАННЫЕ ИЗ participants.txt -->
+        <div class="players-grid">
+            <!-- 1. VShtamm -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>VShtamm</h2>
+                    </div>
+                    <div class="player-number">#01</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Spirit</span>
+                    <span class="killer-hours">4600 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/vshtamm" target="_blank">twitch.tv/vshtamm</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>vshtamm_</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 2. Rocket -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>Rocket</h2>
+                    </div>
+                    <div class="player-number">#02</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Spirit</span>
+                    <span class="killer-hours">11800 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/1v1rocket" target="_blank">twitch.tv/1v1rocket</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>rocketdbd</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 3. Dark Passenger -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>Dark Passenger</h2>
+                    </div>
+                    <div class="player-number">#03</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Oni</span>
+                    <span class="killer-hours">3500 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/dark0passenger" target="_blank">twitch.tv/dark0passenger</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>vernal_fortune69_45686</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 4. Murasame -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>Murasame</h2>
+                    </div>
+                    <div class="player-number">#04</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Huntress</span>
+                    <span class="killer-hours">4000 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/1yhgmz1" target="_blank">twitch.tv/1yhgmz1</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>idmurasame</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-times-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 5. Karpov123 -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>Karpov123</h2>
+                    </div>
+                    <div class="player-number">#05</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Spirit</span>
+                    <span class="killer-hours">4000 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/fovemix" target="_blank">twitch.tv/fovemix</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>karpov1230973</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 6. NightAngel -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>NightAngel</h2>
+                    </div>
+                    <div class="player-number">#06</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Artist</span>
+                    <span class="killer-hours">3100 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://www.twitch.tv/nightange11" target="_blank">twitch.tv/nightange11</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>haorami</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+
+            <!-- 7. Wenny -->
+            <div class="player-card">
+                <div class="player-header">
+                    <div class="player-name">
+                        <i class="fas fa-user"></i>
+                        <h2>Wenny</h2>
+                    </div>
+                    <div class="player-number">#07</div>
+                </div>
+                <div class="killer-info">
+                    <span class="killer-name">Oni</span>
+                    <span class="killer-hours">2700 ч</span>
+                </div>
+                <div class="player-details">
+                    <div class="detail-row">
+                        <i class="fab fa-twitch"></i>
+                        <a href="https://twitch.tv/dotti_dbd" target="_blank">twitch.tv/dotti_dbd</a>
+                    </div>
+                    <div class="detail-row">
+                        <i class="fab fa-discord"></i>
+                        <span>wenny_dbd</span>
+                    </div>
+                </div>
+                <div class="player-status status-confirmed">
+                    <i class="fas fa-check-circle"></i> ПОДТВЕРЖДЕН
+                </div>
+            </div>
+        </div>
+
+        <!-- СТАТИСТИКА -->
+        <div class="stats">
+            <div class="stat">
+                <i class="fas fa-users"></i> ВСЕГО: 7
+            </div>
+            <div class="stat">
+                <i class="fas fa-check-circle" style="color: #00ff00;"></i> ПРИНЯТО: 7
+            </div>
+            <div class="stat">
+                <i class="fas fa-times-circle" style="color: #ff0a0a;"></i> ОТКЛОНЕНО: 0
+            </div>
+        </div>
+    </div>
+</body>
+</html>
